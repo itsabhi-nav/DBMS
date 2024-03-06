@@ -1,0 +1,7 @@
+pyarrow
+pandas
+openpyxl
+flask 
+apscheduler
+python-dotenv
+pymongo

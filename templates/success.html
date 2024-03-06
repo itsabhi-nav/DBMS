@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="refresh" content="5;url=/" />
+  <title>Success</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f8f8;
+      text-align: center;
+      margin: 20px;
+      color: #333;
+    }
+
+    h1 {
+      color: #4caf50;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    #timer {
+      font-size: 24px;
+      color: #4caf50;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Congratulations!</h1>
+    <p>Your data has been successfully added to our database.</p>
+    <p><strong>Name:</strong> {{ name }}</p>
+    <p><strong>Email:</strong> {{ email }}</p>
+    <p>Redirecting back to the registration form in <span id="timer">5</span> seconds...</p>
+  </div>
+
+  <script>
+    var countdown = 5;
+    var timerElement = document.getElementById("timer");
+
+    function updateTimer() {
+      timerElement.textContent = countdown;
+      countdown--;
+
+      if (countdown < 0) {
+        clearInterval(timerInterval);
+      }
+    }
+
+    var timerInterval = setInterval(updateTimer, 1000);
+  </script>
+</body>
+</html>
