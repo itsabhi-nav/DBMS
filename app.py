@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import datetime
 from dotenv import load_dotenv
-from flask import Flask, render_template, session, request, redirect
+from flask import Flask, render_template, session
 from pymongo import MongoClient
 from email_utils import sendEmail
 from insert_data import insert_data
@@ -35,9 +35,10 @@ def index():
 
         writeInd = []
         for index, item in df.iterrows():
-            # Check if 'Birthday' is already a Timestamp object
-            if isinstance(item['Birthday'], pd.Timestamp):
-                item['Birthday'] = item['Birthday'].to_pydatetime()  # Convert Pandas Timestamp to Python datetime
+            # Check if 'Birthday' is already a datetime object
+            if isinstance(item['Birthday'], datetime.datetime):
+                # Skip parsing if it's already a datetime object
+                pass
             else:
                 # Handle date format mismatch
                 try:
@@ -71,45 +72,6 @@ def index():
     session['sent_emails'] = sent_emails  # Storing sent_emails in session
 
     return render_template('index.html', sent_emails=sent_emails)
-
-@app.route('/add_user', methods=['GET', 'POST'])
-def add_user():
-    if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        birthday = request.form['birthday']
-        dialogue = request.form['dialogue']
-
-        # Convert the date string to the correct format
-        try:
-            birthday = datetime.datetime.strptime(birthday, "%d-%m-%Y").strftime("%Y-%m-%d")
-        except ValueError:
-            return "Invalid date format. Please enter the date in the format DD-MM-YYYY."
-
-        # Connect to MongoDB
-        client = MongoClient("mongodb+srv://dubeyabhinav1001:dubey@cluster0.rjzqrrm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", ssl=True)
-        db = client['dbms']  # Replace 'your_database_name' with your actual database name
-        collection = db['bday']  # Replace 'your_collection_name' with your actual collection name
-
-        # Check if the email already exists in the database
-        existing_user = collection.find_one({'Email': email})
-        if existing_user:
-            return "User with this email already exists in the database."
-
-        # Insert new user data into the database
-        new_user = {
-            'Name': name,
-            'Email': email,
-            'Birthday': birthday,
-            'Dialogue': dialogue,
-            'Year': []  # You can initialize this with an empty list
-        }
-        collection.insert_one(new_user)
-        client.close()
-
-        return redirect('/')
-    else:
-        return render_template('add_user.html')
 
 if __name__ == "__main__":
     with app.app_context():
