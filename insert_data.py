@@ -1,26 +1,26 @@
 import datetime
 from pymongo import MongoClient
 from email_utils import sendEmail
-import os  # Add this import to access environment variables
+import os
 
 def insert_data():
     # Connect to MongoDB
     client = MongoClient("mongodb+srv://dubeyabhinav1001:dubey@cluster0.rjzqrrm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-    db = client['dbms']  # Replace 'your_database_name' with your actual database name
-    collection = db['bday']  # Replace 'your_collection_name' with your actual collection name
+    db = client['dbms']  
+    collection = db['bday']  
 
     # Data to insert
     data = [
         {
             "Name": "Alice",
-            "Birthday": datetime.datetime(1985, 2, 7),  # Example birthday
+            "Birthday": datetime.datetime(1985, 2, 7),
             "Year": "1985",
             "Email": "alice@example.com",
             "Dialogue": "Happy Birthday Alice!"
         },
         {
             "Name": "Bob",
-            "Birthday": datetime.datetime(1992, 3, 7),  # Example birthday
+            "Birthday": datetime.datetime(1992, 3, 7),
             "Year": "1992",
             "Email": "chtgpt979@gmail.com",
             "Dialogue": "Happy Birthday Bob!"
@@ -50,12 +50,13 @@ def insert_data():
             doc['Birthday'] = datetime.datetime.strptime(doc['Birthday'], "%Y-%m-%d")
         bday = doc['Birthday'].strftime("%d-%m")
         if today == bday:
-            GMAIL_ID = os.getenv('GMAIL_ID')  # Retrieve GMAIL_ID from environment variables
-            GMAIL_PSWD = os.getenv('GMAIL_PSWD')  # Retrieve GMAIL_PSWD from environment variables
-            sendEmail(doc['Email'], "Happy Birthday", doc['Dialogue'], GMAIL_ID, GMAIL_PSWD)  # Pass GMAIL_ID and GMAIL_PSWD as arguments to sendEmail
+            # Retrieve GMAIL_ID and GMAIL_PSWD from environment variables
+            GMAIL_ID = os.getenv('GMAIL_ID')  
+            GMAIL_PSWD = os.getenv('GMAIL_PSWD')  
+            sendEmail(doc['Email'], "Happy Birthday", doc['Dialogue'], GMAIL_ID, GMAIL_PSWD)  
             print(f"Wished Happy Birthday to {doc['Name']}.")
 
-    client.close()  # Close the MongoDB connection
+    client.close()  
 
 if __name__ == "__main__":
     insert_data()
