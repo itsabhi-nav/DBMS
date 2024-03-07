@@ -1,9 +1,10 @@
 pyarrow
 pandas
 openpyxl
-flask 
+flask==2.0.1
 apscheduler
 python-dotenv
 pymongo
 certifi
 Gunicorn
+werkzeug==2.2.2
