@@ -5,3 +5,4 @@ flask
 apscheduler
 python-dotenv
 pymongo
+certifi

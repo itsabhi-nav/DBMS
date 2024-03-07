@@ -32,10 +32,12 @@ if __name__ == "__main__":
     # Run insert_data.py to insert data into MongoDB
     insert_data.insert_data()
 
-    # Connect to MongoDB
-    client = MongoClient('mongodb://localhost:27017/')
+   # Connect to MongoDB
+    client = MongoClient("mongodb+srv://dubeyabhinav100:pLx3kZ4qZ8oDQbAa@cluster0.rjzqrrm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", ssl=True)
     db = client['dbms']  # Replace 'your_database_name' with your actual database name
     collection = db['bday']  # Replace 'your_collection_name' with your actual collection name
+
+
 
     # Fetch data from MongoDB
     df = pd.DataFrame(list(collection.find()))
