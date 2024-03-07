@@ -7,6 +7,7 @@ from flask import Flask, render_template, session, request, redirect, url_for
 from pymongo import MongoClient
 from email_utils import sendEmail
 from insert_data import insert_data
+import pymongo
 
 app = Flask(__name__)
 app.secret_key = 'abcdefghijklmnopqrstuvwxyz'
@@ -65,8 +66,18 @@ def index():
             df.loc[i, 'Year'] = str(yr) + ',' + str(yearNow)
 
         # Save the updated DataFrame back to MongoDB
-        collection.delete_many({})  # Clear existing data in the collection
-        collection.insert_many(df.to_dict('records'))
+        try:
+            collection.delete_many({})  # Clear existing data in the collection
+            collection.insert_many(df.to_dict('records'))
+        except pymongo.errors.BulkWriteError as e:
+            for error in e.details.get('writeErrors', []):
+                if error.get('code') == 11000:  # Check for duplicate key error
+                    print(f"Duplicate key error: {error.get('errmsg')}")
+                    # Handle the duplicate key error (e.g., log, skip insertion, update existing document, etc.)
+                else:
+                    print(f"Other write error: {error}")
+        except Exception as e:
+            print(f"Error saving data to MongoDB: {str(e)}")
 
     client.close()  # Close the MongoDB connection
 
