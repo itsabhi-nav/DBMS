@@ -111,4 +111,4 @@ def add_user():
 if __name__ == "__main__":
     with app.app_context():
         insert_data()  # Insert data before starting the Flask app
-    app.run(debug=True)
+    app.run(debug=False, host='0.0.0.0')
