@@ -35,11 +35,15 @@ def index():
 
         writeInd = []
         for index, item in df.iterrows():
-            # Handle date format mismatch
-            try:
-                item['Birthday'] = datetime.datetime.strptime(item['Birthday'], "%Y-%m-%d")  # Convert string to datetime
-            except ValueError:
-                item['Birthday'] = datetime.datetime.strptime(item['Birthday'], "%d-%m-%Y")  # Convert string to datetime
+            # Check if 'Birthday' is already a Timestamp object
+            if isinstance(item['Birthday'], pd.Timestamp):
+                item['Birthday'] = item['Birthday'].to_pydatetime()  # Convert Pandas Timestamp to Python datetime
+            else:
+                # Handle date format mismatch
+                try:
+                    item['Birthday'] = datetime.datetime.strptime(item['Birthday'], "%Y-%m-%d")  # Convert string to datetime
+                except ValueError:
+                    item['Birthday'] = datetime.datetime.strptime(item['Birthday'], "%d-%m-%Y")  # Convert string to datetime
 
             bday = item['Birthday'].strftime("%d-%m")  # Convert datetime to string
             if today == bday and yearNow not in str(item['Year']):
