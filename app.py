@@ -35,12 +35,11 @@ def index():
 
         writeInd = []
         for index, item in df.iterrows():
-            # Skip conversion if Birthday is already a datetime object
-            if isinstance(item['Birthday'], str):  # Check if 'Birthday' is a string
-                try:
-                    item['Birthday'] = datetime.datetime.strptime(item['Birthday'], "%Y-%m-%d")  # Convert string to datetime
-                except ValueError:
-                    item['Birthday'] = datetime.datetime.strptime(item['Birthday'], "%d-%m-%Y")  # Convert string to datetime
+            # Handle date format mismatch
+            try:
+                item['Birthday'] = datetime.datetime.strptime(item['Birthday'], "%Y-%m-%d")  # Convert string to datetime
+            except ValueError:
+                item['Birthday'] = datetime.datetime.strptime(item['Birthday'], "%d-%m-%Y")  # Convert string to datetime
 
             bday = item['Birthday'].strftime("%d-%m")  # Convert datetime to string
             if today == bday and yearNow not in str(item['Year']):
@@ -111,4 +110,4 @@ def add_user():
 if __name__ == "__main__":
     with app.app_context():
         insert_data()  # Insert data before starting the Flask app
-    app.run(debug=False, host='0.0.0.0')
+    app.run(debug=True)
